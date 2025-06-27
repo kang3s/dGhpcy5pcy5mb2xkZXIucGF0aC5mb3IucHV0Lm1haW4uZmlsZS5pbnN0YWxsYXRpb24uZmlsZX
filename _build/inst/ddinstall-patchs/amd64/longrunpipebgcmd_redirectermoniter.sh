@@ -63,7 +63,7 @@ echo '<style>
 </script>' > /var/log/progress
 # for unzip 3, we must use tar as prefix of zstd of it or it wont receive data from stdin
 [ "$UNZIP" = '0' ] && PIPECMDSTR='wget -qO- --no-check-certificate '\"$TARGETDDURL\"' | cat |stdbuf -oL dd of='$hdinfo' bs=32M 2>> /var/log/progress & pid=`expr $! + 0`;echo $pid'
-[ "$UNZIP" = '1' ] && PIPECMDSTR="curl -sL \"$TARGETDDURL\" | gunzip -dc | dd of=\"$hdinfo\" bs=32M status=progress"
+[ "$UNZIP" = '1' ] && PIPECMDSTR='wget -qO- --no-check-certificate '\"$TARGETDDURL\"' | gunzip -dc | dd of='$hdinfo' bs=32M status=progress'
 [ "$UNZIP" = '2' ] && PIPECMDSTR='wget -qO- --no-check-certificate '\"$TARGETDDURL\"' | xzcat |stdbuf -oL dd of='$hdinfo' bs=32M 2>> /var/log/progress & pid=`expr $! + 0`;echo $pid'
 [ "$UNZIP" = '3' ] && PIPECMDSTR='wget -qO- --no-check-certificate '\"$TARGETDDURL\"' | tar -I zstd -Ox |stdbuf -oL dd of='$hdinfo' bs=32M 2>> /var/log/progress & pid=`expr $! + 0`;echo $pid'
 [ "$UNZIP" = '4' ] && PIPECMDSTR='nbdcopy -- [ nbdkit -r --filter=qcow2dec curl sslverify=false '\"$TARGETDDURL\"' ] - | cat |stdbuf -oL dd of='$hdinfo' bs=32M 2>> /var/log/progress & pid=`expr $! + 0`;echo $pid'
